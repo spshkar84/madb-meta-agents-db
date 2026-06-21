@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "description": "MADB first-run 'guided tour' seed. Plants a small, clearly-labelled causal DAG so a brand-new install produces a real recall + trace_cause moment on session #1 instead of an empty store. Every record is tagged 'onboarding_demo' so it can be cleanly removed after the tour (see onboarding/README.md).",
+  "tenant_id": "onboarding-tour",
+  "shared_tag": "onboarding_demo",
+  "memories": [
+    {
+      "id": "m1",
+      "content": "Sample project: samplex.io — a small SaaS that turns CSV uploads into shareable charts. Guiding constraints: ship fast and keep infrastructure cheap.",
+      "tags": ["project", "samplex"],
+      "importance": 0.9,
+      "caused_by": []
+    },
+    {
+      "id": "m2",
+      "content": "Decision: chose SvelteKit over Next.js for the samplex.io frontend. Reason: smaller bundle and less boilerplate for a small team shipping fast.",
+      "tags": ["decision", "samplex", "frontend"],
+      "importance": 0.7,
+      "caused_by": ["m1"]
+    },
+    {
+      "id": "m3",
+      "content": "Decision: chose Cloudflare R2 + D1 over AWS S3 + RDS for samplex.io storage. Reason: no egress fees and a generous free tier honour the keep-infra-cheap constraint.",
+      "tags": ["decision", "samplex", "infrastructure"],
+      "importance": 0.7,
+      "caused_by": ["m1"]
+    },
+    {
+      "id": "m4",
+      "content": "Fixed a hydration mismatch in the samplex.io chart component: the server rendered an empty canvas while the client drew data. Resolved by deferring the chart render to onMount so it only runs client-side.",
+      "tags": ["decision", "samplex", "frontend", "bugfix"],
+      "importance": 0.6,
+      "caused_by": ["m2"]
+    },
+    {
+      "id": "m5",
+      "content": "After a public-bucket scare during testing, switched samplex.io uploads to short-lived signed URLs on R2 instead of public objects. Cheap to keep, and no accidental data exposure.",
+      "tags": ["decision", "samplex", "infrastructure", "security"],
+      "importance": 0.6,
+      "caused_by": ["m3"]
+    }
+  ],
+  "tour": {
+    "suggested_recall_query": "what do you remember about my project and the decisions I made",
+    "trace_from": "m4",
+    "expected_aha": "recall returns the project context across a fresh session; trace_cause on the hydration fix walks back through the SvelteKit decision to the project root — lineage a flat vector store cannot produce.",
+    "first_prompts_for_user": [
+      "What do you remember about my project?",
+      "Why did I pick SvelteKit?",
+      "Walk me back through how I ended up deferring the chart render to onMount."
+    ]
+  }
+}

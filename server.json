@@ -1,0 +1,44 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.spshkar84/madb-memory",
+  "title": "MADB — Agent Memory Database",
+  "description": "Durable causal memory for AI agents — semantic recall, causal lineage, and reusable skills. Local, single-owner.",
+  "repository": {
+    "url": "https://github.com/spshkar84/madb-meta-agents-db",
+    "source": "github"
+  },
+  "version": "0.2.6",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "madb-mcp-server",
+      "version": "0.2.6",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "Where MADB stores your causal memory — local, on your machine (default ~/.madb/data).",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "MADB_DATA_DIR"
+        },
+        {
+          "description": "Tenant namespace key for separating memory streams (e.g. per project). Defaults to a built-in namespace.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "MADB_TENANT_ID"
+        },
+        {
+          "description": "Set to 'off' to disable anonymous, count-only usage telemetry.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "MADB_TELEMETRY"
+        }
+      ]
+    }
+  ]
+}

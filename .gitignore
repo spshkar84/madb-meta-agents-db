@@ -1,0 +1,85 @@
+# Rust build artifacts
+target/
+**/target/
+**/*.rs.bk
+
+# Cargo — keep Cargo.lock at workspace root (we're an application, not a library)
+# Individual crate Cargo.lock files should not be committed.
+crates/*/Cargo.lock
+
+# Python (maturin develop install side-effects + venvs)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.venv/
+venv/
+.Python
+build/
+dist/
+*.whl
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.env
+.env.local
+
+# Maturin develop side-effects — the installed wheel lives in the caller's
+# venv; we do not want any artifact under the project tree.
+.maturin/
+
+# Test coverage reports
+target/criterion/
+*.profraw
+*.profdata
+coverage/
+
+# MADB runtime data directories (should never be in the repo).
+# Intentionally NOT using a global *.lock pattern so the workspace
+# Cargo.lock stays tracked (Rust workspace Cargo.lock must be committed).
+data/
+/tmp/madb*
+**/data/madb*
+**/data/maos_memory*
+**/wal/*.log
+**/hlc.json
+# MADB data-dir lockfile is literally named "LOCK" (no extension)
+# inside the data directory, not at the workspace root.
+**/data/**/LOCK
+
+# ---------------------------------------------------------------------------
+# SOURCE-LEAK GUARD (this is the PUBLIC distribution repo).
+# The Rust/Cython engine source lives ONLY in the private engine repo
+# (meta-agents-db-engine). It must NEVER be tracked here — the public repo
+# ships docs + the MCP registry manifest; the software ships as compiled
+# wheels on PyPI. `crates/` exists in the working tree locally but must stay
+# untracked so a stray `git add -A` cannot leak the moat.
+crates/
+**/crates/
+sdk/
+*.pyx
+build_src/
+
+# Internal strategic / architecture notes — local only, never committed.
+# Not part of the distributed Software and not covered by the proprietary
+# EULA. If you add more internal docs, add them here.
+/CHIEF_ARCHITECT_ASSESSMENT.md
+/NOVELTY_ASSESSMENT.md
+/NOVELTY_DELTA_PLAN.md
+/Demo.md
+/STABILITY.md
+/Anthropyfiles/
+/BRAHM_GUIDE.md
+.claude/
+# GTM strategy — NOT for public (cohorts/pricing/Anthropic-target/revenue).
+skills/madb-audience/
+# Moat mechanism + patent-relevant design — NOT for public.
+/docs/self-tuning-loop.md
+# Internal R&D (explicit patent claims, BRAHM/tradebot refs) — NOT for public.
+/docs/v1_5_local_brain/
