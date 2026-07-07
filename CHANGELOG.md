@@ -11,6 +11,12 @@ The "one brain, many sessions" release: the recall fix, the validated memory
 reflex, and a shared-store daemon so concurrent sessions stop fighting over
 the single-owner lock.
 
+> **0.2.9 has been yanked** (recall could miss recent high-importance
+> memories; an invalid `tenant_id` could abort the process — both fixed
+> here). As with every release, only the latest version stays installable;
+> existing 0.2.9 installs keep working and `pip install -U madb-mcp-server`
+> moves you forward.
+
 ### Added
 - **Shared-brain daemon** — the store is single-process-exclusive, so the
   `madb-mcp-server` wheel now bundles a local daemon (`python -m
