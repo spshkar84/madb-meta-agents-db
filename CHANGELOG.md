@@ -5,6 +5,39 @@ All notable changes to the public MADB distribution (the `madb-mcp-server` and
 compiled binary wheels under the
 [Meta-Agents.AI Proprietary License](./LICENSE); source is not public.
 
+## [0.2.10] — 2026-07-06
+
+The "one brain, many sessions" release: the recall fix, the validated memory
+reflex, and a shared-store daemon so concurrent sessions stop fighting over
+the single-owner lock.
+
+### Added
+- **Shared-brain daemon** — the store is single-process-exclusive, so the
+  `madb-mcp-server` wheel now bundles a local daemon (`python -m
+  madb_mcp_server --daemon`): exactly one process owns the store and every
+  session is an RPC client over token-guarded loopback HTTP. Spawned on
+  demand (race-safe), discovered via a 0600 endpoint file next to the data
+  dir, shuts down when idle — no service to install, nothing to manage.
+  Multiple concurrent Claude sessions now share one brain instead of
+  hitting the single-owner lock.
+- **Version handshake with graceful handoff** — after an upgrade, a newer
+  client asks a stale older daemon to drain and exit, then takes ownership.
+  No more manual `madb-doctor unlock` after upgrading.
+- **`MADB_MODE`** — `auto` (default: daemon with embedded fallback),
+  `embedded` (pre-0.2.10 single-session direct open), `daemon` (daemon
+  failures are fatal instead of falling back). Idle timeout tunable via
+  `MADB_DAEMON_IDLE_SEC` (default 900; ≤0 disables).
+
+### Fixed
+- **Recall surfacing (P0)** — recent high-importance memories now reliably
+  surface via `recall(query)` (independently validated: 5/5 on a fresh-venv
+  wheel rebuild).
+
+### Changed
+- **`madb-memory` skill v2** — the bundled reflex skill now passes the
+  live-session behavioral gate: a fresh session leads from the injected
+  resume brief instead of re-deriving context from git logs and file crawls.
+
 ## [0.2.6] — 2026-06-20
 
 Maintenance + distribution release. Supersedes 0.2.5 (which stays on PyPI; `pip`/`uvx` resolve to 0.2.6).

@@ -58,6 +58,27 @@ The MCP tools are necessary but not sufficient for "default." Without a Skill te
 
 A companion [`skills/madb-onboarding/SKILL.md`](./skills/madb-onboarding/SKILL.md) handles the first run: it detects an empty store and offers a 60-second guided tour (see [`onboarding/`](./onboarding/)) so your first session ends with a real recall + `trace_cause` moment instead of an empty store.
 
+## One brain, many sessions (0.2.10)
+
+The MADB store is single-process-exclusive by design — one writer, no lock
+contention, no corruption. But Claude Code spawns one MCP server per session,
+and you run more than one session. Since 0.2.10 that just works: the wheel
+bundles a local daemon that becomes the store's one owner, and every session's
+MCP server is a lightweight RPC client of it over token-guarded loopback HTTP.
+
+- **Nothing to install or manage.** The first session spawns the daemon on
+  demand (race-safe); later sessions discover and reuse it. When it's been
+  idle for 15 minutes it exits on its own; the next call respawns it.
+- **Upgrades hand off cleanly.** After you upgrade the wheel, the newer client
+  asks the old daemon to drain and exit, then takes ownership — no stale
+  process squatting the store, no manual unlock.
+- **Same memory everywhere.** Two terminals, a SessionStart resume hook, and a
+  background agent all read and write the same brain at the same time.
+
+`MADB_MODE=embedded` restores the pre-0.2.10 single-session direct open;
+`MADB_MODE=daemon` makes daemon failures fatal instead of falling back.
+`MADB_DAEMON_IDLE_SEC` tunes the idle timeout (≤0 disables).
+
 ## License
 
 MADB is distributed under the [**Meta-Agents.AI Proprietary License**](./LICENSE). Summary:

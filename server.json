@@ -2,17 +2,17 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.spshkar84/madb-memory",
   "title": "MADB — Agent Memory Database",
-  "description": "Durable causal memory for AI agents: semantic recall, causal lineage, reusable skills. Local.",
+  "description": "Durable causal memory for AI agents — semantic recall, causal lineage, and reusable skills. Local, single-owner.",
   "repository": {
     "url": "https://github.com/spshkar84/madb-meta-agents-db",
     "source": "github"
   },
-  "version": "0.2.6",
+  "version": "0.2.10",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "madb-mcp-server",
-      "version": "0.2.6",
+      "version": "0.2.10",
       "transport": {
         "type": "stdio"
       },
